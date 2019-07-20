@@ -115,16 +115,28 @@ class VQAFeatureDataset(Dataset):
             open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % name)))
         print('loading features from h5 file')
         h5_path = os.path.join(dataroot, '%s36.hdf5' % name)
-        with h5py.File(h5_path, 'r') as hf:
-            self.features = np.array(hf.get('image_features'))
-            self.spatials = np.array(hf.get('spatial_features'))
+        #################################################################################
+        ######################!!!Comsume  too much  memory!!!############################
+        #################################################################################
+        # with h5py.File(h5_path, 'r') as hf:
+        #     self.features = np.array(hf.get('image_features'))
+        #     self.spatials = np.array(hf.get('spatial_features'))
+        hf=h5py.File(h5_path,'r')
+        self.features = hf.get('image_features')
+        self.spatials = hf.get('spatial_features')
+        #################################################################################
 
         self.entries = _load_dataset(dataroot, name, self.img_id2idx)
 
         self.tokenize()
+        #################################################################################
         self.tensorize()
-        self.v_dim = self.features.size(2)
-        self.s_dim = self.spatials.size(2)
+        #################################################################################
+        # self.v_dim = self.features.size(2)
+        # self.s_dim = self.spatials.size(2)
+        self.v_dim = self.features.shape[2]
+        self.s_dim = self.spatials.shape[2]
+        #################################################################################
 
     def tokenize(self, max_length=14):
         """Tokenizes the questions.
@@ -143,8 +155,11 @@ class VQAFeatureDataset(Dataset):
             entry['q_token'] = tokens
 
     def tensorize(self):
-        self.features = torch.from_numpy(self.features)
-        self.spatials = torch.from_numpy(self.spatials)
+        #################################################################################
+        ######################!!!Comsume too much memory!!!##############################
+        #################################################################################
+        # self.features = torch.from_numpy(self.features)
+        # self.spatials = torch.from_numpy(self.spatials)
 
         for entry in self.entries:
             question = torch.from_numpy(np.array(entry['q_token']))
@@ -164,9 +179,14 @@ class VQAFeatureDataset(Dataset):
 
     def __getitem__(self, index):
         entry = self.entries[index]
-        features = self.features[entry['image']]
-        spatials = self.spatials[entry['image']]
-
+        ################################################################################
+        ####################Convert to torch from numpy here############################
+        ################################################################################
+        # features = self.features[entry['image']]
+        # spatials = self.spatials[entry['image']]
+        features = torch.from_numpy(self.features[entry['image']])
+        spatials = torch.from_numpy(self.spatials[entry['image']])
+        ################################################################################
         question = entry['q_token']
         answer = entry['answer']
         labels = answer['labels']
