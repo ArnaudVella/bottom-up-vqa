@@ -47,8 +47,8 @@ def train(model, train_loader, eval_loader, num_epochs, output):
             optim.zero_grad()
 
             batch_score = compute_score_with_logits(pred, a.data).sum()
-            total_loss += loss.data[0] * v.size(0)
-            train_score += batch_score
+            total_loss += loss.item() * v.size(0)
+            train_score += batch_score.item()
 
         total_loss /= len(train_loader.dataset)
         train_score = 100 * train_score / len(train_loader.dataset)
@@ -76,8 +76,8 @@ def evaluate(model, dataloader):
         q = Variable(q, volatile=True).cuda()
         pred = model(v, b, q, None)
         batch_score = compute_score_with_logits(pred, a.cuda()).sum()
-        score += batch_score
-        upper_bound += (a.max(1)[0]).sum()
+        score += batch_score.item()
+        upper_bound += (a.max(1)[0]).sum().item()
         num_data += pred.size(0)
 
     score = score / len(dataloader.dataset)
