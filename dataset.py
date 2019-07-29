@@ -110,9 +110,13 @@ class VQAFeatureDataset(Dataset):
         self.num_ans_candidates = len(self.ans2label)
 
         self.dictionary = dictionary
-
-        self.img_id2idx = cPickle.load(
-            open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % name)))
+        if name.startswith('resnet'):
+            self.img_id2idx = cPickle.load(
+                open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % name[7:len(name)])))     #changed here
+        else:
+            self.img_id2idx = cPickle.load(
+                open(os.path.join(dataroot, '%s36_imgid2idx.pkl' % name)))
+ 
         print('loading features from h5 file')
         h5_path = os.path.join(dataroot, '%s36.hdf5' % name)
         #################################################################################
