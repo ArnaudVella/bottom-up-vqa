@@ -30,8 +30,8 @@ if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
 
     dictionary = Dictionary.load_from_file('data/dictionary.pkl')
-    train_dset = VQAFeatureDataset('train', dictionary)
-    eval_dset = VQAFeatureDataset('val', dictionary)
+    train_dset = VQAFeatureDataset('resnet_train', dictionary)
+    eval_dset = VQAFeatureDataset('resnet_val', dictionary)
     batch_size = args.batch_size
 
     constructor = 'build_%s' % args.model
