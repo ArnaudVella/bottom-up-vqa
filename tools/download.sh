@@ -33,10 +33,10 @@ unzip data/trainval_36.zip -d data
 rm data/trainval_36.zip
 
 #Images
-!wget http://images.cocodataset.org/zips/train2014.zip
-!unzip -q train2014.zip -d data/
-!rm train2014.zip
+wget http://images.cocodataset.org/zips/train2014.zip
+unzip -q train2014.zip -d data/
+rm train2014.zip
 
-!wget http://images.cocodataset.org/zips/val2014.zip
-!unzip -q val2014.zip -d data/
-!rm val2014.zip
+wget http://images.cocodataset.org/zips/val2014.zip
+unzip -q val2014.zip -d data/
+rm val2014.zip
