@@ -9,8 +9,6 @@ import torch
 import h5py
 from torch.autograd import Variable
 
-!rm data/resnet_train_36.hdf5
-!rm data/resnet_val_36.hdf5
 
 class Train(object):
     def __init__(self, n_entries, dataroot, enddataroot, features_filename):
