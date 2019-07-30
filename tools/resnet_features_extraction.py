@@ -125,5 +125,5 @@ class Train(object):
         h5_file.close()
 
 
-Train([], "data", "train2014", "data/resnet_train_36.hdf5")
-Train([], "data", "val2014", "data/resnet_val_36.hdf5")
+Train([], "data", "train2014", "data/resnet_train36.hdf5")
+Train([], "data", "val2014", "data/resnet_val36.hdf5")
