@@ -129,8 +129,10 @@ class VQAFeatureDataset(Dataset):
         self.features = hf.get('image_features')
         self.spatials = hf.get('spatial_features')
         #################################################################################
-
-        self.entries = _load_dataset(dataroot, name, self.img_id2idx)
+        if name.startswith('resnet'):
+            self.entries = _load_dataset(dataroot, name[7:len(name)], self.img_id2idx)     #changed here
+        else:
+            self.entries = _load_dataset(dataroot, name, self.img_id2idx)
 
         self.tokenize()
         #################################################################################
@@ -139,7 +141,7 @@ class VQAFeatureDataset(Dataset):
         # self.v_dim = self.features.size(2)
         # self.s_dim = self.spatials.size(2)
         self.v_dim = self.features.shape[2]
-        self.s_dim = self.spatials.shape[2]
+        #self.s_dim = self.spatials.shape[2]
         #################################################################################
 
     def tokenize(self, max_length=14):
@@ -188,8 +190,10 @@ class VQAFeatureDataset(Dataset):
         ################################################################################
         # features = self.features[entry['image']]
         # spatials = self.spatials[entry['image']]
-        features = torch.from_numpy(self.features[entry['image']])
-        spatials = torch.from_numpy(self.spatials[entry['image']])
+        features = torch.from_numpy(self.features[entry['image']])#.type(torch.float32)
+        spatials = torch.from_numpy(self.spatials[entry['image']])#.type(torch.float32)
+        features = features.type(torch.float32)
+        spatials = spatials.type(torch.float32)
         ################################################################################
         question = entry['q_token']
         answer = entry['answer']
@@ -199,6 +203,7 @@ class VQAFeatureDataset(Dataset):
         if labels is not None:
             target.scatter_(0, labels, scores)
 
+        #return features, question, target
         return features, spatials, question, target
 
     def __len__(self):
